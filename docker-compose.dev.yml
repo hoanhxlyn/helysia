@@ -1,0 +1,17 @@
+---
+services:
+  postgres:
+    container_name: helysia-postgres
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=helysia
+      - POSTGRES_PASSWORD=269c72d5d9bba9d89eac8857
+      - POSTGRES_DB=helysia
+    ports: [5432:5432]
+    volumes: [postgres_data:/var/lib/postgresql]
+volumes:
+  postgres_data:
+networks:
+  default: {}
+

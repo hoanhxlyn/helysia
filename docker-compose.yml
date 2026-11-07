@@ -1,0 +1,48 @@
+---
+x-app-env: &app-env
+  NODE_ENV: production
+  PORT: "3000"
+  DATABASE_URL: postgres://helysia:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/helysia
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+
+services:
+  app:
+    container_name: helysia-app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: ["${PORT:-3000}:3000"]
+    environment: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+  migrate:
+    profiles: [tools]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prerelease
+    command: [bun, run, migrate]
+    environment: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    container_name: helysia-postgres
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: helysia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: helysia
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U helysia -d helysia]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes: [postgres_data:/var/lib/postgresql]
+volumes:
+  postgres_data:
+networks:
+  default: {}
