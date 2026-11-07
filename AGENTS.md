@@ -8,7 +8,9 @@ Starter template: Bun + Elysia backend, server-rendered JSX (`@kitajs/html`), ht
 
 ## Commands
 
-Bun 1.4.4 or newer: pinned in `.bun-version`, `package.json` `engines` and the `Dockerfile` base image. Bun does not enforce `engines`, so keep these three in sync by hand.
+Bun 1.4.4 or newer: pinned in `.mise.toml`, `package.json` `engines` and the `Dockerfile` base image. Bun does not enforce `engines`, so keep these three in sync by hand.
+
+NixOS (or any machine with nix + direnv enabled): entering the repo loads bun (via mise) and starts a local Postgres on a unix socket with `DATABASE_URL` and a throwaway `JWT_SECRET` already exported — no docker, nothing to install on the machine. Run `direnv allow` once per machine.
 
 ```bash
 bun install

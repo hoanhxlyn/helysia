@@ -6,7 +6,7 @@ It ships with a working demo (register, log in, per-user todo CRUD, public and p
 
 ## Quick start
 
-Requires Bun 1.4.4 or newer (pinned in `.bun-version` and `package.json` `engines`; Bun does not enforce `engines`, so check `bun --version`).
+Requires Bun 1.4.4 or newer (pinned in `.mise.toml` and `package.json` `engines`; Bun does not enforce `engines`, so check `bun --version`).
 
 ```bash
 tiged kurumeii/helysia <your-project-name>
@@ -29,6 +29,8 @@ bun dev                         # http://localhost:3000; builds CSS, then restar
 | `bun x tsc --noEmit` | Type check |
 
 There is no test suite. Swagger is served at `/swagger`.
+
+**NixOS (or nix + direnv):** the repo ships `flake.nix` + `.envrc`. Enable `programs.direnv.nix-direnv.enable` once on the machine, `direnv allow` and `mise trust` per repo, then drop the `docker compose` line above: the hook provides bun from `.mise.toml` (via mise) and starts Postgres 18 in `.postgres/` on a unix socket, exporting `DATABASE_URL` and a stable dev `JWT_SECRET`. Database state lives in gitignored dirs; stop it with `pg_ctl stop -D .postgres/data`.
 
 ## How the codebase works
 
